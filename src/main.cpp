@@ -6,9 +6,9 @@
 #include <ui.h>
 
 void setup() {
-
+    lv_scr_load(ui_FirstScreen);
 }
 
 void loop() {
-    
+
 }
