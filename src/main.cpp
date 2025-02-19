@@ -142,9 +142,11 @@ void setup()
     lv_disp_t *dispp = lv_disp_get_default();
     lv_theme_t *theme = lv_theme_default_init(dispp, lv_palette_main(LV_PALETTE_BLUE), lv_palette_main(LV_PALETTE_RED), true, LV_FONT_DEFAULT);
     lv_disp_set_theme(dispp, theme);
-    
+
     ui_FirstScreen = lv_obj_create(NULL);
     lv_obj_clear_flag( ui_FirstScreen, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
+
+    lv_obj_set_style_bg_color(ui_FirstScreen, lv_color_hex(0x003a57), LV_PART_MAIN);
 
     ui_Button1 = lv_btn_create(ui_FirstScreen);
     lv_obj_set_width( ui_Button1, 255);
