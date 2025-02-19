@@ -5,41 +5,173 @@
 #include <ESP_IOExpander_Library.h>
 #include <ui.h>
 
+// Extend IO Pin define
+#define TP_RST 1
+#define LCD_BL 2
+#define LCD_RST 3
+#define SD_CS 4
+#define USB_SEL 5
+
+// I2C Pin define
+#define I2C_MASTER_NUM 0
+#define I2C_MASTER_SDA_IO 8
+#define I2C_MASTER_SCL_IO 9
+
+/**
+/* To use the built-in examples and demos of LVGL uncomment the includes below respectively.
+ * You also need to copy `lvgl/examples` to `lvgl/src/examples`. Similarly for the demos `lvgl/demos` to `lvgl/src/demos`.
+ */
+// #include <demos/lv_demos.h>
+// #include <examples/lv_examples.h>
+
+/* LVGL porting configurations */
+#define LVGL_TICK_PERIOD_MS     (2)
+#define LVGL_TASK_MAX_DELAY_MS  (500)
+#define LVGL_TASK_MIN_DELAY_MS  (1)
+#define LVGL_TASK_STACK_SIZE    (4 * 1024)
+#define LVGL_TASK_PRIORITY      (2)
 #define LVGL_BUF_SIZE           (ESP_PANEL_LCD_H_RES * 20)
 
 ESP_Panel *panel = NULL;
+SemaphoreHandle_t lvgl_mux = NULL;                  // LVGL mutex
 
-/* setup for flush callback */
+/* Display flushing */
 void lvgl_port_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p)
 {
     panel->getLcd()->drawBitmap(area->x1, area->y1, area->x2 + 1, area->y2 + 1, color_p);
     lv_disp_flush_ready(disp);
 }
 
+void lvgl_port_lock(int timeout_ms)
+{
+    const TickType_t timeout_ticks = (timeout_ms < 0) ? portMAX_DELAY : pdMS_TO_TICKS(timeout_ms);
+    xSemaphoreTakeRecursive(lvgl_mux, timeout_ticks);
+}
+
+void lvgl_port_unlock(void)
+{
+    xSemaphoreGiveRecursive(lvgl_mux);
+}
+
+void lvgl_port_task(void *arg)
+{
+    Serial.println("Starting LVGL task");
+
+    uint32_t task_delay_ms = LVGL_TASK_MAX_DELAY_MS;
+    while (1) {
+        // Lock the mutex due to the LVGL APIs are not thread-safe
+        lvgl_port_lock(-1);
+        task_delay_ms = lv_timer_handler();
+        // Release the mutex
+        lvgl_port_unlock();
+        if (task_delay_ms > LVGL_TASK_MAX_DELAY_MS) {
+            task_delay_ms = LVGL_TASK_MAX_DELAY_MS;
+        } else if (task_delay_ms < LVGL_TASK_MIN_DELAY_MS) {
+            task_delay_ms = LVGL_TASK_MIN_DELAY_MS;
+        }
+        vTaskDelay(pdMS_TO_TICKS(task_delay_ms));
+    }
+}
+
 void setup()
 {
+    Serial.begin(115200); /* prepare for possible serial debug */
+
+    String LVGL_Arduino = "Hello LVGL! ";
+    LVGL_Arduino += String('V') + lv_version_major() + "." + lv_version_minor() + "." + lv_version_patch();
+
+    Serial.println(LVGL_Arduino);
+    Serial.println("I am ESP32_Display_Panel");
+
     panel = new ESP_Panel();
 
+    /* Initialize LVGL core */
     lv_init();
 
-    /* declare buffer */
+    /* Initialize LVGL buffers */
     static lv_disp_draw_buf_t draw_buf;
+    /* Using double buffers is more faster than single buffer */
+    /* Using internal SRAM is more fast than PSRAM (Note: Memory allocated using `malloc` may be located in PSRAM.) */
     uint8_t *buf = (uint8_t *)heap_caps_calloc(1, LVGL_BUF_SIZE * sizeof(lv_color_t), MALLOC_CAP_INTERNAL);
     assert(buf);
     lv_disp_draw_buf_init(&draw_buf, buf, NULL, LVGL_BUF_SIZE);
 
-    /* setting up display */
+    /* Initialize the display device */
     static lv_disp_drv_t disp_drv;
     lv_disp_drv_init(&disp_drv);
+    /* Change the following line to your display resolution */
     disp_drv.hor_res = ESP_PANEL_LCD_H_RES;
     disp_drv.ver_res = ESP_PANEL_LCD_V_RES;
-    disp_drv.draw_buf = &draw_buf;
     disp_drv.flush_cb = lvgl_port_disp_flush;
+    disp_drv.draw_buf = &draw_buf;
     lv_disp_drv_register(&disp_drv);
 
+    panel->init();
+
+    /**
+     * These development boards require the use of an IO expander to configure the screen,
+     * so it needs to be initialized in advance and registered with the panel for use.
+     *
+     */
+    Serial.println("Initialize IO expander");
+    /* Initialize IO expander */
+    // ESP_IOExpander *expander = new ESP_IOExpander_CH422G(I2C_MASTER_NUM, ESP_IO_EXPANDER_I2C_CH422G_ADDRESS_000, I2C_MASTER_SCL_IO, I2C_MASTER_SDA_IO);
+    ESP_IOExpander *expander = new ESP_IOExpander_CH422G(I2C_MASTER_NUM, ESP_IO_EXPANDER_I2C_CH422G_ADDRESS_000);
+    expander->init();
+    expander->begin();
+    expander->multiPinMode(TP_RST | LCD_BL | LCD_RST | SD_CS | USB_SEL, OUTPUT);
+    expander->multiDigitalWrite(TP_RST | LCD_BL | LCD_RST | SD_CS, HIGH);
+
+    // Turn off backlight
+    // expander->digitalWrite(USB_SEL, LOW);
+    expander->digitalWrite(USB_SEL, LOW);
+    /* Add into panel */
+    panel->addIOExpander(expander);
+
+    /* Start panel */
+    panel->begin();
+
+    /* Create a task to run the LVGL task periodically */
+    lvgl_mux = xSemaphoreCreateRecursiveMutex();
+    xTaskCreate(lvgl_port_task, "lvgl", LVGL_TASK_STACK_SIZE, NULL, LVGL_TASK_PRIORITY, NULL);
+
+    /* Lock the mutex due to the LVGL APIs are not thread-safe */
+    lvgl_port_lock(-1);
+
+    
+    lv_disp_t *dispp = lv_disp_get_default();
+    lv_theme_t *theme = lv_theme_default_init(dispp, lv_palette_main(LV_PALETTE_BLUE), lv_palette_main(LV_PALETTE_RED), true, LV_FONT_DEFAULT);
+    lv_disp_set_theme(dispp, theme);
+    
+    ui_FirstScreen = lv_obj_create(NULL);
+    lv_obj_clear_flag( ui_FirstScreen, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
+
+    ui_Button1 = lv_btn_create(ui_FirstScreen);
+    lv_obj_set_width( ui_Button1, 255);
+    lv_obj_set_height( ui_Button1, 174);
+    lv_obj_set_x( ui_Button1, -202 );
+    lv_obj_set_y( ui_Button1, 0 );
+    lv_obj_set_align( ui_Button1, LV_ALIGN_CENTER );
+    lv_obj_add_flag( ui_Button1, LV_OBJ_FLAG_SCROLL_ON_FOCUS );   /// Flags
+    lv_obj_clear_flag( ui_Button1, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
+    lv_obj_set_style_text_font(ui_Button1, &lv_font_montserrat_30, LV_PART_MAIN| LV_STATE_DEFAULT);
+
+    ui_Label1 = lv_label_create(ui_Button1);
+    lv_obj_set_width( ui_Label1, LV_SIZE_CONTENT);  /// 1
+    lv_obj_set_height( ui_Label1, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_align( ui_Label1, LV_ALIGN_CENTER );
+    lv_label_set_text(ui_Label1,"Hello World");
+    lv_obj_set_style_text_align(ui_Label1, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN| LV_STATE_DEFAULT);
+
+    lv_disp_load_scr( ui_FirstScreen);
+
+    /* Release the mutex */
+    lvgl_port_unlock();
+
+    Serial.println("Setup done");
 }
 
 void loop()
 {
-    sleep(1);
+
 }
