@@ -25,6 +25,13 @@ void setup()
 
     lv_display_set_buffers(display, buf1, NULL, sizeof(buf1), LV_DISPLAY_RENDER_MODE_PARTIAL);  /*Initialize the display buffer.*/
     lv_display_set_flush_cb(display, my_disp_flush); /*Initialize the flush callback*/
+
+    panel->init();
+
+    panel->begin();
+
+    lv_obj_t * slider1 = lv_slider_create(lv_screen_active());
+    lv_slider_set_value(slider1, 70, LV_ANIM_ON);
 }
 
 void loop()
