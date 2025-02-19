@@ -146,24 +146,13 @@ void setup()
     ui_FirstScreen = lv_obj_create(NULL);
     lv_obj_clear_flag( ui_FirstScreen, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
 
-    lv_obj_set_style_bg_color(ui_FirstScreen, lv_color_hex(0x003a57), LV_PART_MAIN);
+    lv_obj_set_style_bg_color(ui_FirstScreen, lv_color_hex(0x003a00), LV_PART_MAIN);
 
-    ui_Button1 = lv_btn_create(ui_FirstScreen);
-    lv_obj_set_width( ui_Button1, 255);
-    lv_obj_set_height( ui_Button1, 174);
-    lv_obj_set_x( ui_Button1, -202 );
-    lv_obj_set_y( ui_Button1, 0 );
-    lv_obj_set_align( ui_Button1, LV_ALIGN_CENTER );
-    lv_obj_add_flag( ui_Button1, LV_OBJ_FLAG_SCROLL_ON_FOCUS );   /// Flags
-    lv_obj_clear_flag( ui_Button1, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
-    lv_obj_set_style_text_font(ui_Button1, &lv_font_montserrat_30, LV_PART_MAIN| LV_STATE_DEFAULT);
-
-    ui_Label1 = lv_label_create(ui_Button1);
-    lv_obj_set_width( ui_Label1, LV_SIZE_CONTENT);  /// 1
-    lv_obj_set_height( ui_Label1, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_align( ui_Label1, LV_ALIGN_CENTER );
-    lv_label_set_text(ui_Label1,"Hello World");
-    lv_obj_set_style_text_align(ui_Label1, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN| LV_STATE_DEFAULT);
+    /*Create a white label, set its text and align it to the center*/
+    lv_obj_t * label = lv_label_create(ui_FirstScreen);
+    lv_label_set_text(label, "Hello world");
+    lv_obj_set_style_text_color(ui_FirstScreen, lv_color_hex(0xffffff), LV_PART_MAIN);
+    lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
 
     lv_disp_load_scr( ui_FirstScreen);
 
