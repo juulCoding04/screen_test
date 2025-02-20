@@ -133,10 +133,14 @@ void setup()
     lv_style_set_line_rounded(&style, true);
 
     /*Draw a line from upper left to bottom right*/
-    Line* l = new Line(0, 0, ESP_PANEL_LCD_H_RES, ESP_PANEL_LCD_V_RES, c_black);
-    l->draw(ui_FirstScreen, &style);
+    // Line* l = new Line(0, 0, ESP_PANEL_LCD_H_RES, ESP_PANEL_LCD_V_RES, c_black);
+    // l->draw(ui_FirstScreen, &style);
 
-    lv_disp_load_scr( ui_FirstScreen);
+    /*Drawing text on screen*/
+    lv_obj_t* label = lv_label_create(ui_FirstScreen);
+    lv_label_set_text(label, "Hello there");
+
+    lv_disp_load_scr(ui_FirstScreen);
 
     /* Release the mutex */
     lvgl_port_unlock();
