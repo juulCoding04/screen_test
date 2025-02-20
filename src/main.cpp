@@ -4,6 +4,7 @@
 #include <ESP_Panel_Library.h>
 #include <ESP_IOExpander_Library.h>
 #include <ui.h>
+#include "tools/Screen_SPI/UI.h"
 
 // Extend IO Pin define
 #define TP_RST 1
@@ -134,8 +135,11 @@ void setup()
     lv_obj_t * obj = lv_line_create(ui_FirstScreen);
     lv_obj_add_style(obj, &style, 0);
 
-    static lv_point_t p[] = {{10, 30}, {30, 50}, {100, 0}};
-    lv_line_set_points(obj, p, 3);
+    // static lv_point_t p[] = {{30, 50}, {100, 0}};
+    // lv_line_set_points(obj, p, 2);
+
+    Line* l = new Line(30, 50, 100, 0, c_black);
+    l->draw(obj);
 
     lv_obj_center(obj);
 
