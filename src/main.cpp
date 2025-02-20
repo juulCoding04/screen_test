@@ -108,26 +108,6 @@ void setup()
 
     panel->init();
 
-    /**
-     * These development boards require the use of an IO expander to configure the screen,
-     * so it needs to be initialized in advance and registered with the panel for use.
-     *
-     */
-    Serial.println("Initialize IO expander");
-    /* Initialize IO expander */
-    // ESP_IOExpander *expander = new ESP_IOExpander_CH422G(I2C_MASTER_NUM, ESP_IO_EXPANDER_I2C_CH422G_ADDRESS_000, I2C_MASTER_SCL_IO, I2C_MASTER_SDA_IO);
-    ESP_IOExpander *expander = new ESP_IOExpander_CH422G(I2C_MASTER_NUM, ESP_IO_EXPANDER_I2C_CH422G_ADDRESS_000);
-    expander->init();
-    expander->begin();
-    expander->multiPinMode(TP_RST | LCD_BL | LCD_RST | SD_CS | USB_SEL, OUTPUT);
-    expander->multiDigitalWrite(TP_RST | LCD_BL | LCD_RST | SD_CS, HIGH);
-
-    // Turn off backlight
-    // expander->digitalWrite(USB_SEL, LOW);
-    expander->digitalWrite(USB_SEL, LOW);
-    /* Add into panel */
-    panel->addIOExpander(expander);
-
     /* Start panel */
     panel->begin();
 
