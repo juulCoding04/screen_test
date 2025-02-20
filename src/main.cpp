@@ -118,20 +118,16 @@ void setup()
     /* Lock the mutex due to the LVGL APIs are not thread-safe */
     lvgl_port_lock(-1);
 
-    
-    // lv_disp_t *dispp = lv_disp_get_default();
-    // lv_theme_t *theme = lv_theme_default_init(dispp, lv_palette_main(LV_PALETTE_BLUE), lv_palette_main(LV_PALETTE_RED), true, LV_FONT_DEFAULT);
-    // lv_disp_set_theme(dispp, theme);
-
     ui_FirstScreen = lv_obj_create(NULL);
     lv_obj_clear_flag( ui_FirstScreen, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
 
-    lv_obj_set_style_bg_color(ui_FirstScreen, lv_color_hex(0x003a00), LV_PART_MAIN);
+    lv_obj_set_style_bg_color(ui_FirstScreen, lv_color_hex(0xffffff), LV_PART_MAIN);
 
     /*Create a white label, set its text and align it to the center*/
     lv_obj_t * label = lv_label_create(ui_FirstScreen);
     lv_label_set_text(label, "Hello world");
-    lv_obj_set_style_text_color(ui_FirstScreen, lv_color_hex(0xffffff), LV_PART_MAIN);
+    lv_obj_set_style_text_color(ui_FirstScreen, lv_color_hex(0xE0115F), LV_PART_MAIN);
+    lv_obj_set_style_text_font(ui_FirstScreen, &lv_font_montserrat_30, LV_PART_MAIN);
     lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
 
     lv_disp_load_scr( ui_FirstScreen);
