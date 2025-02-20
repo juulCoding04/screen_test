@@ -124,6 +124,7 @@ void setup()
 
     lv_obj_set_style_bg_color(ui_FirstScreen, lv_color_hex(0xffffff), LV_PART_MAIN);
 
+    /*Creating a new style*/
     static lv_style_t style;
     lv_style_init(&style);
 
@@ -131,17 +132,9 @@ void setup()
     lv_style_set_line_width(&style, 6);
     lv_style_set_line_rounded(&style, true);
 
-    /*Create an object with the new style*/
-    lv_obj_t * obj = lv_line_create(ui_FirstScreen);
-    lv_obj_add_style(obj, &style, 0);
-
-    // static lv_point_t p[] = {{30, 50}, {100, 0}};
-    // lv_line_set_points(obj, p, 2);
-
-    Line* l = new Line(30, 50, 100, 0, c_black);
-    l->draw(obj);
-
-    lv_obj_center(obj);
+    /*Draw a line from upper left to bottom right*/
+    Line* l = new Line(0, 0, ESP_PANEL_LCD_H_RES, ESP_PANEL_LCD_V_RES, c_black);
+    l->draw(ui_FirstScreen, &style);
 
     lv_disp_load_scr( ui_FirstScreen);
 

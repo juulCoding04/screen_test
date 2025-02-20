@@ -49,8 +49,10 @@ void Component::setXY(int x, int y)
 Line::Line(uint x1, uint y1, uint x2, uint y2, color_t color)
     : Component(x1, y1, color), x2(x2), y2(y2) {};
 
-void Line::draw(lv_obj_t* obj)
+void Line::draw(lv_obj_t* parent, lv_style_t* style)
 {
+    lv_obj_t * obj = lv_line_create(parent);
+    lv_obj_add_style(obj, style, 0);
     static lv_point_t p[] = {{x, y}, {x2, y2}};
     lv_line_set_points(obj, p, 2);
 }

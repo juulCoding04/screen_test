@@ -44,7 +44,7 @@ protected:
 public:
   Line(uint x1, uint y1, uint x2, uint y2, color_t color = default_color);
 
-  void draw(lv_obj_t* obj);
+  void draw(lv_obj_t* parent, lv_style_t* style);
 };
 
 class Text : public Component {
