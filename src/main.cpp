@@ -123,12 +123,21 @@ void setup()
 
     lv_obj_set_style_bg_color(ui_FirstScreen, lv_color_hex(0xffffff), LV_PART_MAIN);
 
-    /*Create a white label, set its text and align it to the center*/
-    lv_obj_t * label = lv_label_create(ui_FirstScreen);
-    lv_label_set_text(label, "Hello world");
-    lv_obj_set_style_text_color(ui_FirstScreen, lv_color_hex(0xE0115F), LV_PART_MAIN);
-    lv_obj_set_style_text_font(ui_FirstScreen, &lv_font_montserrat_30, LV_PART_MAIN);
-    lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
+    static lv_style_t style;
+    lv_style_init(&style);
+
+    lv_style_set_line_color(&style, lv_palette_main(LV_PALETTE_GREY));
+    lv_style_set_line_width(&style, 6);
+    lv_style_set_line_rounded(&style, true);
+
+    /*Create an object with the new style*/
+    lv_obj_t * obj = lv_line_create(ui_FirstScreen);
+    lv_obj_add_style(obj, &style, 0);
+
+    static lv_point_t p[] = {{10, 30}, {30, 50}, {100, 0}};
+    lv_line_set_points(obj, p, 3);
+
+    lv_obj_center(obj);
 
     lv_disp_load_scr( ui_FirstScreen);
 
