@@ -1,43 +1,12 @@
 #include "constants/colors.h"
 #include "tools/Screen_SPI/UI.h"
 
-Component::Component(uint x, uint y, color_t col)
-    : x(x), y(y)
-{
-  switch (col.type)
-  {
-  case single:
-    this->color = rgba_color_t{.red = col.color.single_col,
-                               .green = col.color.single_col,
-                               .blue = col.color.single_col,
-                               .alpha = 255};
-  case RGB:
-    this->color = rgba_color_t{col.color.rgb_col.red,
-                               col.color.rgb_col.green,
-                               col.color.rgb_col.blue,
-                               255};
-  case RGBA:
-    this->color = col.color.rgba_col;
-  }
-};
+Component::Component(uint x, uint y, lv_style_t* style)
+    : x(x), y(y), style(style)
+{ };
 
-void Component::setColor(color_t color)
-{
-  switch (color.type)
-  {
-  case single:
-    this->color = rgba_color_t{color.color.single_col,
-                               color.color.single_col,
-                               color.color.single_col,
-                               255};
-  case RGB:
-    this->color = rgba_color_t{color.color.rgb_col.red,
-                               color.color.rgb_col.green,
-                               color.color.rgb_col.blue,
-                               255};
-  case RGBA:
-    this->color = color.color.rgba_col;
-  }
+void Component::setStyle(lv_style_t* style) {
+  this->style = style;
 }
 
 void Component::setXY(int x, int y)
@@ -46,37 +15,36 @@ void Component::setXY(int x, int y)
   this->y = y;
 }
 
-Line::Line(uint x1, uint y1, uint x2, uint y2, color_t color)
-    : Component(x1, y1, color), x2(x2), y2(y2) {};
+Line::Line(uint x1, uint y1, uint x2, uint y2, lv_style_t* style)
+    : Component(x1, y1, style), x2(x2), y2(y2) {};
 
-void Line::draw(lv_obj_t* parent, lv_style_t* style)
+void Line::draw(lv_obj_t* parent)
 {
-    lv_obj_t * obj = lv_line_create(parent);
-    lv_obj_add_style(obj, style, 0);
-    static lv_point_t p[] = {{x, y}, {x2, y2}};
-    lv_line_set_points(obj, p, 2);
+  lv_obj_t * obj = lv_line_create(parent);
+  lv_obj_add_style(obj, style, 0);
+  static lv_point_t p[] = {{x, y}, {x2, y2}};
+  lv_line_set_points(obj, p, 2);
 }
 
-// Text::Text(uint32_t x,
-//            uint32_t y,
-//            std::string value,
-//            uint8_t size,
-//            color_t color)
-//     : Component(x, y, color), value(value), fontsize(size) {};
+Text::Text(uint32_t x,
+           uint32_t y,
+           const char* value,
+           lv_style_t* style)
+    : Component(x, y, style), value(value) {};
 
-// void Text::draw(TFT_eSPI *tft)
-// {
-//   tft->setTextColor(
-//       tft->color565(color.red, color.green, color.blue), TFT_BLACK, true);
-//   tft->setTextDatum(MC_DATUM);
-//   tft->setTextSize(fontsize);
-//   tft->drawString(value.c_str(), x, y, 4);
-// };
+void Text::draw(lv_obj_t* parent)
+{
+  lv_obj_t* label = lv_label_create(parent);
+  lv_label_set_text(label, value);
+  lv_obj_set_x(label, x);
+  lv_obj_set_y(label, y);
+  lv_obj_add_style(label, style, 0);
+};
 
-// void Text::setText(std::string str)
-// {
-//   this->value = str;
-// }
+void Text::setText(const char* str)
+{
+  this->value = str;
+}
 
 // InformationNumber::InformationNumber(
 //     uint x,

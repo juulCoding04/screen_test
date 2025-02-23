@@ -21,18 +21,18 @@ typedef struct {
 
 class Component {
 protected:
-  Component(uint32_t x, uint32_t y, color_t color = default_color);
+  Component(uint32_t x, uint32_t y, lv_style_t* style);
 
   uint x;
   uint y;
 
-  rgba_color_t color;
+  lv_style_t* style;
 
 public:
   Component() = delete;
 
   virtual void draw(lv_obj_t* obj){};
-  void setColor(color_t color);
+  void setStyle(lv_style_t* style);
   void setXY(int x, int y);
 };
 
@@ -42,23 +42,22 @@ protected:
   uint y2;
 
 public:
-  Line(uint x1, uint y1, uint x2, uint y2, color_t color = default_color);
+  Line(uint x1, uint y1, uint x2, uint y2, lv_style_t* style);
 
-  void draw(lv_obj_t* parent, lv_style_t* style);
+  void draw(lv_obj_t* parent);
 };
 
 class Text : public Component {
 protected:
   uint fontsize;
 
-  std::string value;
+  const char* value;
 
 public:
-  Text(uint x, uint y, std::string value, uint8_t size = default_size,
-       color_t color = default_color);
+  Text(uint x, uint y, const char* value, lv_style_t* style);
 
-  void draw(lv_obj_t* obj);
-  void setText(std::string str);
+  void draw(lv_obj_t* parent);
+  void setText(const char* str);
 };
 
 class InformationNumber : public Text {

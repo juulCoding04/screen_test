@@ -131,14 +131,15 @@ void setup()
     lv_style_set_line_color(&style, lv_palette_main(LV_PALETTE_GREY));
     lv_style_set_line_width(&style, 6);
     lv_style_set_line_rounded(&style, true);
+    lv_style_set_text_font(&style, &lv_font_montserrat_30);
 
     /*Draw a line from upper left to bottom right*/
-    // Line* l = new Line(0, 0, ESP_PANEL_LCD_H_RES, ESP_PANEL_LCD_V_RES, c_black);
-    // l->draw(ui_FirstScreen, &style);
+    // Line* l = new Line(0, 0, ESP_PANEL_LCD_H_RES, ESP_PANEL_LCD_V_RES, &style);
+    // l->draw(ui_FirstScreen);
 
     /*Drawing text on screen*/
-    lv_obj_t* label = lv_label_create(ui_FirstScreen);
-    lv_label_set_text(label, "Hello there");
+    Text* t = new Text(100, 100, "Hello there", &style);
+    t->draw(ui_FirstScreen);
 
     lv_disp_load_scr(ui_FirstScreen);
 
