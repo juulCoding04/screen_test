@@ -118,7 +118,7 @@ protected:
   rgba_color_t selectedColor;
 
 public:
-  Selectable(int x, int y, bool select = true, color_t color = default_color);
+  Selectable(int x, int y, bool select = true, lv_style_t* style);
   virtual void draw(lv_obj_t* obj);
   virtual void activate();
 

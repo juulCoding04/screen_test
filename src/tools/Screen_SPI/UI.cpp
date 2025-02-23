@@ -142,11 +142,11 @@ void Text::setText(const char* str)
 //   tft->fillRect(x, y, width, height, tft->color565(color.red, color.green, color.blue));
 // }
 
-// Selectable::Selectable(int x, int y, bool select, color_t color) : Component(x, y, color), selectable(select) {};
+Selectable::Selectable(int x, int y, bool select, lv_style_t* style) : Component(x, y, style), selectable(select) {};
 
-// // virtual functions
-// void Selectable::draw(TFT_eSPI *tft) {};
-// void Selectable::activate() {};
+// virtual functions
+void Selectable::draw(lv_obj_t* parent) {};
+void Selectable::activate() {};
 
 // ButtonUI::ButtonUI(int x, int y, uint width, uint height, std::function<void()> func, std::string str, bool select, color_t color, color_t selColor) : Selectable(x, y, select, color), width(width), height(height), str(str), fnt(func)
 // {
