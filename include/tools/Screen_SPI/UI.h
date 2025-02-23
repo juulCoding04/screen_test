@@ -111,36 +111,36 @@ public:
 
 // TODO: Implement these classes
 
-class Selectable : public Component {
-protected:
-  bool selectable;
+// class Selectable : public Component {
+// protected:
+//   bool selectable;
 
-  rgba_color_t selectedColor;
+//   rgba_color_t selectedColor;
 
-public:
-  Selectable(int x, int y, bool select = true, lv_style_t* style);
-  virtual void draw(lv_obj_t* obj);
-  virtual void activate();
+// public:
+//   Selectable(int x, int y, bool select = true, lv_style_t* style);
+//   virtual void draw(lv_obj_t* obj);
+//   virtual void activate();
 
-  bool active = false;
-};
+//   bool active = false;
+// };
 
-class ButtonUI : public Selectable {
-protected:
-  const std::string str;
-  std::function<void()> fnt;
+// class ButtonUI : public Selectable {
+// protected:
+//   const char* str;
+//   std::function<void()> fnt;
 
-  uint width;
-  uint height;
+//   uint width;
+//   uint height;
 
-public:
-  ButtonUI(int x, int y, uint width, uint height, std::function<void()> func,
-           const std::string str = "", bool select = true,
-           color_t color = default_color, color_t selectCol = c_blue);
-  void draw(lv_obj_t* obj);
+// public:
+//   ButtonUI(int x, int y, uint width, uint height, std::function<void()> func,
+//            const char* str = "", bool select = true,
+//            lv_style_t* style, color_t selectCol = c_blue);
+//   void draw(lv_obj_t* obj);
 
-  void activate();
-};
+//   void activate();
+// };
 
 // class ChangeableValue: public Selectable {
 //   protected:

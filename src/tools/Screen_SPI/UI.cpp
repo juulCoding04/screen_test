@@ -142,29 +142,29 @@ void Text::setText(const char* str)
 //   tft->fillRect(x, y, width, height, tft->color565(color.red, color.green, color.blue));
 // }
 
-Selectable::Selectable(int x, int y, bool select, lv_style_t* style) : Component(x, y, style), selectable(select) {};
+// Selectable::Selectable(int x, int y, bool select, lv_style_t* style) : Component(x, y, style), selectable(select) {};
 
-// virtual functions
-void Selectable::draw(lv_obj_t* parent) {};
-void Selectable::activate() {};
+// // virtual functions
+// void Selectable::draw(lv_obj_t* parent) {};
+// void Selectable::activate() {};
 
-// ButtonUI::ButtonUI(int x, int y, uint width, uint height, std::function<void()> func, std::string str, bool select, color_t color, color_t selColor) : Selectable(x, y, select, color), width(width), height(height), str(str), fnt(func)
+// ButtonUI::ButtonUI(int x, int y, uint width, uint height, std::function<void()> func, const char* str, bool select, lv_style_t* style, color_t selColor) : Selectable(x, y, select, style), width(width), height(height), str(str), fnt(func)
 // {
-//   switch (selColor.type)
-//   {
-//   case single:
-//     this->selectedColor = rgba_color_t{.red = selColor.color.single_col,
-//                                        .green = selColor.color.single_col,
-//                                        .blue = selColor.color.single_col,
-//                                        .alpha = 255};
-//   case RGB:
-//     this->selectedColor = rgba_color_t{selColor.color.rgb_col.red,
-//                                        selColor.color.rgb_col.green,
-//                                        selColor.color.rgb_col.blue,
-//                                        255};
-//   case RGBA:
-//     this->selectedColor = selColor.color.rgba_col;
-//   }
+//   // switch (selColor.type)
+//   // {
+//   // case single:
+//   //   this->selectedColor = rgba_color_t{.red = selColor.color.single_col,
+//   //                                      .green = selColor.color.single_col,
+//   //                                      .blue = selColor.color.single_col,
+//   //                                      .alpha = 255};
+//   // case RGB:
+//   //   this->selectedColor = rgba_color_t{selColor.color.rgb_col.red,
+//   //                                      selColor.color.rgb_col.green,
+//   //                                      selColor.color.rgb_col.blue,
+//   //                                      255};
+//   // case RGBA:
+//   //   this->selectedColor = selColor.color.rgba_col;
+//   // }
 // };
 
 // void ButtonUI::draw(TFT_eSPI *tft)

@@ -36,6 +36,20 @@
 ESP_Panel *panel = NULL;
 SemaphoreHandle_t lvgl_mux = NULL;                  // LVGL mutex
 
+static void btn_event_cb(lv_event_t * e)
+{
+    // lv_event_code_t code = lv_event_get_code(e);
+    // lv_obj_t * btn = lv_event_get_target(e);
+    // if(code == LV_EVENT_CLICKED) {
+    //     static uint8_t cnt = 0;
+    //     cnt++;
+
+    //     /*Get the first child of the button which is the label and change its text*/
+    //     lv_obj_t * label = lv_obj_get_child(btn, 0);
+    //     lv_label_set_text_fmt(label, "Button: %d", cnt);
+    // }
+}
+
 /* Display flushing */
 void lvgl_port_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p)
 {
@@ -131,15 +145,25 @@ void setup()
     lv_style_set_line_color(&style, lv_palette_main(LV_PALETTE_GREY));
     lv_style_set_line_width(&style, 6);
     lv_style_set_line_rounded(&style, true);
-    lv_style_set_text_font(&style, &lv_font_montserrat_30);
+    lv_style_set_text_font(&style, &lv_font_montserrat_14);
 
     /*Draw a line from upper left to bottom right*/
     // Line* l = new Line(0, 0, ESP_PANEL_LCD_H_RES, ESP_PANEL_LCD_V_RES, &style);
     // l->draw(ui_FirstScreen);
 
     /*Drawing text on screen*/
-    Text* t = new Text(100, 100, "Hello there", &style);
-    t->draw(ui_FirstScreen);
+    // Text* t = new Text(100, 100, "Hello there", &style);
+    // t->draw(ui_FirstScreen);
+
+    /*Drawing ButtonUI*/
+    lv_obj_t * btn = lv_btn_create(ui_FirstScreen);     /*Add a button the current screen*/
+    lv_obj_set_pos(btn, 10, 10);                            /*Set its position*/
+    lv_obj_set_size(btn, 120, 50);                          /*Set its size*/
+    lv_obj_add_event_cb(btn, btn_event_cb, LV_EVENT_ALL, NULL);           /*Assign a callback to the button*/
+
+    Text* button_txt = new Text(10, 10, "Button", &style);
+    button_txt->draw(btn);
+
 
     lv_disp_load_scr(ui_FirstScreen);
 
