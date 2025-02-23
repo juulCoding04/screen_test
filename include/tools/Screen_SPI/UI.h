@@ -21,7 +21,7 @@ typedef struct {
 
 class Component {
 protected:
-  Component(uint32_t x, uint32_t y, lv_style_t* style);
+  Component(uint32_t x, uint32_t y, lv_style_t* style = nullptr);
 
   uint x;
   uint y;
@@ -111,36 +111,37 @@ public:
 
 // TODO: Implement these classes
 
-// class Selectable : public Component {
-// protected:
-//   bool selectable;
+class Selectable : public Component {
+protected:
+  bool selectable;
 
-//   rgba_color_t selectedColor;
+  rgba_color_t selectedColor;
 
-// public:
-//   Selectable(int x, int y, bool select = true, lv_style_t* style);
-//   virtual void draw(lv_obj_t* obj);
-//   virtual void activate();
+public:
+  Selectable(int x, int y, bool select = true, lv_style_t* style = nullptr);
+  virtual void draw(lv_obj_t* obj);
+  virtual void activate();
 
-//   bool active = false;
-// };
+  bool active = false;
+};
 
-// class ButtonUI : public Selectable {
-// protected:
-//   const char* str;
-//   std::function<void()> fnt;
+class ButtonUI : public Selectable {
+protected:
+  const char* str;
+  lv_event_cb_t fnt;
+  lv_style_t* selStyle;
 
-//   uint width;
-//   uint height;
+  uint width;
+  uint height;
 
-// public:
-//   ButtonUI(int x, int y, uint width, uint height, std::function<void()> func,
-//            const char* str = "", bool select = true,
-//            lv_style_t* style, color_t selectCol = c_blue);
-//   void draw(lv_obj_t* obj);
+public:
+  ButtonUI(int x, int y, uint width, uint height, lv_event_cb_t func,
+           const char* str = "", bool select = true,
+           lv_style_t* style = nullptr, lv_style_t* selStyle = nullptr);
+  void draw(lv_obj_t* parent);
 
-//   void activate();
-// };
+  // void activate();
+};
 
 // class ChangeableValue: public Selectable {
 //   protected:

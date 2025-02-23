@@ -156,14 +156,8 @@ void setup()
     // t->draw(ui_FirstScreen);
 
     /*Drawing ButtonUI*/
-    lv_obj_t * btn = lv_btn_create(ui_FirstScreen);     /*Add a button the current screen*/
-    lv_obj_set_pos(btn, 10, 10);                            /*Set its position*/
-    lv_obj_set_size(btn, 120, 50);                          /*Set its size*/
-    lv_obj_add_event_cb(btn, btn_event_cb, LV_EVENT_ALL, NULL);           /*Assign a callback to the button*/
-
-    Text* button_txt = new Text(10, 10, "Button", &style);
-    button_txt->draw(btn);
-
+    // ButtonUI* btn = new ButtonUI(10, 10, 120, 50, btn_event_cb, "Button", true, &style, &style);
+    // btn->draw(ui_FirstScreen);
 
     lv_disp_load_scr(ui_FirstScreen);
 

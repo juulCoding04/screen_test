@@ -142,47 +142,36 @@ void Text::setText(const char* str)
 //   tft->fillRect(x, y, width, height, tft->color565(color.red, color.green, color.blue));
 // }
 
-// Selectable::Selectable(int x, int y, bool select, lv_style_t* style) : Component(x, y, style), selectable(select) {};
+Selectable::Selectable(int x, int y, bool select, lv_style_t* style) : Component(x, y, style), selectable(select) {};
 
-// // virtual functions
-// void Selectable::draw(lv_obj_t* parent) {};
-// void Selectable::activate() {};
+// virtual functions
+void Selectable::draw(lv_obj_t* parent) {};
+void Selectable::activate() {};
 
-// ButtonUI::ButtonUI(int x, int y, uint width, uint height, std::function<void()> func, const char* str, bool select, lv_style_t* style, color_t selColor) : Selectable(x, y, select, style), width(width), height(height), str(str), fnt(func)
-// {
-//   // switch (selColor.type)
-//   // {
-//   // case single:
-//   //   this->selectedColor = rgba_color_t{.red = selColor.color.single_col,
-//   //                                      .green = selColor.color.single_col,
-//   //                                      .blue = selColor.color.single_col,
-//   //                                      .alpha = 255};
-//   // case RGB:
-//   //   this->selectedColor = rgba_color_t{selColor.color.rgb_col.red,
-//   //                                      selColor.color.rgb_col.green,
-//   //                                      selColor.color.rgb_col.blue,
-//   //                                      255};
-//   // case RGBA:
-//   //   this->selectedColor = selColor.color.rgba_col;
-//   // }
-// };
+ButtonUI::ButtonUI(int x, int y, uint width, uint height, lv_event_cb_t func, const char* str, bool select, lv_style_t* style, lv_style_t* selStyle) : Selectable(x, y, select, style), width(width), height(height), str(str), fnt(func), selStyle(selStyle)
+{};
 
-// void ButtonUI::draw(TFT_eSPI *tft)
-// {
-//   if (active)
-//   {
-//     tft->drawRect(x, y, width, height, tft->color565(selectedColor.red, selectedColor.green, selectedColor.blue));
-//   }
-//   else
-//   {
-//     tft->drawRect(x, y, width, height, tft->color565(color.red, color.green, color.blue));
-//   }
+void ButtonUI::draw(lv_obj_t* parent)
+{
+  lv_obj_t * btn = lv_btn_create(parent);     /*Add a button the current screen*/
+  lv_obj_set_pos(btn, x, y);                            /*Set its position*/
+  lv_obj_set_size(btn, width, height);                          /*Set its size*/
+  if (active)
+  {
+    lv_obj_add_style(btn, selStyle, 0);
+  }
+  else
+  {
+    lv_obj_add_style(btn, style, 0);
+  }
 
-//   tft->setTextColor(tft->color565(color.red, color.green, color.blue), TFT_BLACK, true);
-//   tft->setTextDatum(MC_DATUM);
-//   tft->setTextSize(default_size);
-//   tft->drawString(str.c_str(), x + width / 2, y + height / 2, 4);
-// }
+  lv_obj_add_event_cb(btn, fnt, LV_EVENT_ALL, NULL);           /*Assign a callback to the button*/
+
+  lv_obj_t * label = lv_label_create(btn);          /*Add a label to the button*/
+  lv_label_set_text(label, str);                    /*Set the labels text*/
+  lv_obj_add_style(label, style, 0);
+  lv_obj_center(label);
+}
 
 // void ButtonUI::activate()
 // {
