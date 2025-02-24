@@ -145,19 +145,19 @@ void setup()
     lv_style_set_line_color(&style, lv_palette_main(LV_PALETTE_GREY));
     lv_style_set_line_width(&style, 6);
     lv_style_set_line_rounded(&style, true);
-    lv_style_set_text_font(&style, &lv_font_montserrat_14);
+    lv_style_set_text_font(&style, &lv_font_montserrat_30);
 
     /*Draw a line from upper left to bottom right*/
     // Line* l = new Line(0, 0, ESP_PANEL_LCD_H_RES, ESP_PANEL_LCD_V_RES, &style);
     // l->draw(ui_FirstScreen);
 
     /*Drawing text on screen*/
-    // Text* t = new Text(100, 100, "Hello there", &style);
-    // t->draw(ui_FirstScreen);
+    Text* t = new Text(350, 150, "Hello there", &style);
+    t->draw(ui_FirstScreen);
 
     /*Drawing ButtonUI*/
-    // ButtonUI* btn = new ButtonUI(10, 10, 120, 50, btn_event_cb, "Button", true, &style, &style);
-    // btn->draw(ui_FirstScreen);
+    ButtonUI* btn = new ButtonUI(10, 10, 300, 300, btn_event_cb, "Button", true, &style, &style);
+    btn->draw(ui_FirstScreen);
 
     lv_disp_load_scr(ui_FirstScreen);
 
