@@ -27,6 +27,7 @@ public:
 
 private:
 //   TFT_eSPI tft;
+  lv_obj_t* obj;
   int counter = 0;
   std::vector<Screen*> screens;
 };

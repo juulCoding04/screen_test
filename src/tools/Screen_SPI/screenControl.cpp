@@ -21,13 +21,13 @@ ScreenController::ScreenController()
 
 void ScreenController::draw()
 {
-    currentScreen->draw(&tft);
+    currentScreen->draw(obj);
 }
 
 void ScreenController::setScreen(Screen *screen)
 {
     Serial.write("Changing screens\n");
-    tft.fillScreen(TFT_BLACK);
+    lv_obj_set_style_bg_color(obj, lv_color_hex(0x000000), LV_PART_MAIN);
 
     currentScreen = screen;
 }
