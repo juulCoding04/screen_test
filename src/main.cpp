@@ -3,8 +3,9 @@
 #include <lvgl.h>
 #include <ESP_Panel_Library.h>
 #include <ESP_IOExpander_Library.h>
-#include <ui.h>
+// #include <ui.h>
 #include "tools/Screen_SPI/UI.h"
+#include "tools/Screen_SPI/screenControl.h"
 
 // Extend IO Pin define
 #define TP_RST 1
@@ -35,6 +36,17 @@
 
 ESP_Panel *panel = NULL;
 SemaphoreHandle_t lvgl_mux = NULL;                  // LVGL mutex
+
+ScreenController* SC;
+
+/* ------------------------------ Main Screen ------------------------------ */
+Text* txt_Orion_state;
+Text* txt_ELVIS_state;
+Text* txt_HB_ECU;
+Text* txt_HB_ASSI;
+Text* txt_HB_ELVIS;
+Text* txt_HB_PDU;
+Text* txt_AS_debug;
 
 static void btn_event_cb(lv_event_t * e)
 {
@@ -133,10 +145,16 @@ void setup()
     /* Lock the mutex due to the LVGL APIs are not thread-safe */
     lvgl_port_lock(-1);
 
-    ui_FirstScreen = lv_obj_create(NULL);
-    lv_obj_clear_flag( ui_FirstScreen, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
+    SC = new ScreenController();
 
-    lv_obj_set_style_bg_color(ui_FirstScreen, lv_color_hex(0xffffff), LV_PART_MAIN);
+    Screen* scr_main = SC->getScreen(1);
+
+    // lv_obj_t *obj;
+
+    // obj = lv_obj_create(NULL);
+    // lv_obj_clear_flag( obj, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
+
+    // lv_obj_set_style_bg_color(obj, lv_color_hex(0xffffff), LV_PART_MAIN);
 
     /*Creating a new style*/
     static lv_style_t style;
@@ -151,15 +169,27 @@ void setup()
     // Line* l = new Line(0, 0, ESP_PANEL_LCD_H_RES, ESP_PANEL_LCD_V_RES, &style);
     // l->draw(ui_FirstScreen);
 
-    /*Drawing text on screen*/
-    Text* t = new Text(350, 150, "Hello there", &style);
-    t->draw(ui_FirstScreen);
+    // /*Drawing text on screen*/
+    // Text* t = new Text(350, 150, "Hello there", &style);
+    // t->draw(obj);
 
-    /*Drawing ButtonUI*/
-    ButtonUI* btn = new ButtonUI(10, 10, 300, 300, btn_event_cb, "Button", true, &style, &style);
-    btn->draw(ui_FirstScreen);
+    // /*Drawing ButtonUI*/
+    // ButtonUI* btn = new ButtonUI(10, 10, 300, 300, btn_event_cb, "Button", true, &style, &style);
+    // btn->draw(obj);
 
-    lv_disp_load_scr(ui_FirstScreen);
+    txt_Orion_state = new Text(150, 50, "UNKNOWN", &style);
+    txt_ELVIS_state = new Text(150, 80, "UNKNOWN", &style);
+
+    scr_main->addComponent(new Text(50, 50, "Orion: ", &style));
+    scr_main->addComponent(txt_Orion_state);
+    scr_main->addComponent(new Text(50, 80, "ELVIS: ", &style));
+    scr_main->addComponent(txt_ELVIS_state);
+
+    SC->setScreen(scr_main);
+
+    SC->draw();
+
+    // lv_disp_load_scr(obj);
 
     /* Release the mutex */
     lvgl_port_unlock();
