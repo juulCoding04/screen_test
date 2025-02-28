@@ -52,17 +52,32 @@ void ui_init() {
     lv_style_set_line_color(&style, lv_palette_main(LV_PALETTE_GREY));
     lv_style_set_line_width(&style, 6);
     lv_style_set_line_rounded(&style, true);
-    lv_style_set_text_font(&style, &lv_font_montserrat_30);
+    lv_style_set_text_font(&style, &lv_font_montserrat_14);
 
     Screen* scr_main = SC->getScreen(1);
 
     txt_Orion_state = new Text(150, 50, "UNKNOWN", &style);
     txt_ELVIS_state = new Text(150, 80, "UNKNOWN", &style);
 
+    txt_HB_ECU = new Text(200, 300, "NOK", &style);
+    txt_HB_ASSI = new Text(280, 300, "NOK", &style);
+    txt_HB_ELVIS = new Text(360, 300, "NOK", &style);
+    txt_HB_PDU = new Text(440, 300, "NOK", &style);
+
     scr_main->addComponent(new Text(50, 50, "Orion: ", &style));
     scr_main->addComponent(txt_Orion_state);
     scr_main->addComponent(new Text(50, 80, "ELVIS: ", &style));
     scr_main->addComponent(txt_ELVIS_state);
+
+    scr_main->addComponent(new Text(80, 300, "Heartbeats: ", &style));
+    scr_main->addComponent(new Text(200, 270, "ECU", &style));
+    scr_main->addComponent(txt_HB_ECU);
+    scr_main->addComponent(new Text(280, 270, "ASSI", &style));
+    scr_main->addComponent(txt_HB_ASSI);
+    scr_main->addComponent(new Text(360, 270, "ELVIS", &style));
+    scr_main->addComponent(txt_HB_ELVIS);
+    scr_main->addComponent(new Text(440, 270, "PDU", &style));
+    scr_main->addComponent(txt_HB_PDU);
 
     // lv_disp_load_scr(obj);
     SC->setScreen(scr_main);
