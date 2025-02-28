@@ -133,10 +133,12 @@ void setup()
     /* Lock the mutex due to the LVGL APIs are not thread-safe */
     lvgl_port_lock(-1);
 
-    ui_FirstScreen = lv_obj_create(NULL);
-    lv_obj_clear_flag( ui_FirstScreen, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
+    lv_obj_t *obj;
 
-    lv_obj_set_style_bg_color(ui_FirstScreen, lv_color_hex(0xffffff), LV_PART_MAIN);
+    obj = lv_obj_create(NULL);
+    lv_obj_clear_flag( obj, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
+
+    lv_obj_set_style_bg_color(obj, lv_color_hex(0xffffff), LV_PART_MAIN);
 
     /*Creating a new style*/
     static lv_style_t style;
@@ -153,13 +155,13 @@ void setup()
 
     /*Drawing text on screen*/
     Text* t = new Text(350, 150, "Hello there", &style);
-    t->draw(ui_FirstScreen);
+    t->draw(obj);
 
     /*Drawing ButtonUI*/
     ButtonUI* btn = new ButtonUI(10, 10, 300, 300, btn_event_cb, "Button", true, &style, &style);
-    btn->draw(ui_FirstScreen);
+    btn->draw(obj);
 
-    lv_disp_load_scr(ui_FirstScreen);
+    lv_disp_load_scr(obj);
 
     /* Release the mutex */
     lvgl_port_unlock();

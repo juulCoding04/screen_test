@@ -2,9 +2,9 @@
 
 ScreenController::ScreenController()
 {
-    // tft.init();
-    // tft.setRotation(3);
-    // tft.setCursor(0, 0);
+    obj = lv_obj_create(NULL);
+    lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
+    lv_obj_set_style_bg_color(obj, lv_color_hex(0xffffff), LV_PART_MAIN);
 
     screens.push_back(new Screen("Boot", SCR_WIDTH, SCR_HEIGHT));
     screens.push_back(new Screen("Main", SCR_WIDTH, SCR_HEIGHT));
@@ -22,12 +22,13 @@ ScreenController::ScreenController()
 void ScreenController::draw()
 {
     currentScreen->draw(obj);
+    lv_disp_load_scr(obj);
 }
 
 void ScreenController::setScreen(Screen *screen)
 {
     Serial.write("Changing screens\n");
-    lv_obj_set_style_bg_color(obj, lv_color_hex(0x000000), LV_PART_MAIN);
+    // lv_obj_set_style_bg_color(obj, lv_color_hex(0x000000), LV_PART_MAIN);
 
     currentScreen = screen;
 }
