@@ -53,8 +53,10 @@ void ui_init() {
     lv_style_set_line_width(&style, 6);
     lv_style_set_line_rounded(&style, true);
     lv_style_set_text_font(&style, &lv_font_montserrat_14);
+    lv_style_set_text_color(&style, lv_color_hex(0x000000));
 
     static lv_style_t style_NOK;
+    lv_style_init(&style_NOK);
     lv_style_set_text_color(&style_NOK, lv_color_hex(0xFF0000));
     lv_style_set_text_font(&style_NOK, &lv_font_montserrat_14);
 
