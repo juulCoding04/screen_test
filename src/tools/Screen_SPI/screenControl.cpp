@@ -30,6 +30,10 @@ void ScreenController::setScreen(Screen *screen)
     Serial.write("Changing screens\n");
     // lv_obj_set_style_bg_color(obj, lv_color_hex(0x000000), LV_PART_MAIN);
 
+    // find screen index
+    auto it = std::find(screens.begin(), screens.end(), screen);
+    counter = it - screens.begin();
+
     currentScreen = screen;
 }
 
