@@ -7,25 +7,6 @@
 #include "tools/Screen_SPI/UI.h"
 #include "tools/Screen_SPI/screenControl.h"
 
-// Extend IO Pin define
-#define TP_RST 1
-#define LCD_BL 2
-#define LCD_RST 3
-#define SD_CS 4
-#define USB_SEL 5
-
-// I2C Pin define
-#define I2C_MASTER_NUM 0
-#define I2C_MASTER_SDA_IO 8
-#define I2C_MASTER_SCL_IO 9
-
-/**
-/* To use the built-in examples and demos of LVGL uncomment the includes below respectively.
- * You also need to copy `lvgl/examples` to `lvgl/src/examples`. Similarly for the demos `lvgl/demos` to `lvgl/src/demos`.
- */
-// #include <demos/lv_demos.h>
-// #include <examples/lv_examples.h>
-
 /* LVGL porting configurations */
 #define LVGL_TICK_PERIOD_MS     (2)
 #define LVGL_TASK_MAX_DELAY_MS  (500)
