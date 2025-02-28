@@ -166,11 +166,8 @@ void setup()
     scr_main->addComponent(new Text(50, 80, "ELVIS: ", &style));
     scr_main->addComponent(txt_ELVIS_state);
 
-    SC->setScreen(scr_main);
-
-    SC->draw();
-
     // lv_disp_load_scr(obj);
+    SC->setScreen(scr_main);
 
     /* Release the mutex */
     lvgl_port_unlock();
@@ -180,5 +177,6 @@ void setup()
 
 void loop()
 {
-
+    sleep(1);
+    SC->draw();
 }
